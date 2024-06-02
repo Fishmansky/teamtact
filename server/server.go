@@ -1,13 +1,16 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"log"
+	"log/slog"
 	"net/http"
 	"os"
 	"time"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	_ "github.com/lib/pq"
 
 	"github.com/joho/godotenv"
@@ -68,7 +71,6 @@ func CreateTable(t string) {
 	case "Plans":
 		DB.Exec("CREATE TABLE Plans ( ID SERIAL PRIMARY KEY, WorkDayID INT NOT NULL, FOREIGN KEY (WorkDayID) REFERENCES WorkDays(ID));")
 	}
-	log.Printf("%s: Table %s created", time.Now(), t)
 }
 
 func TableDoesntExist(table string) bool {
@@ -160,6 +162,28 @@ func addWorker(c echo.Context) error {
 func main() {
 	DBInit()
 	e := echo.New()
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	e.Use(middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
+		LogStatus:   true,
+		LogURI:      true,
+		LogError:    true,
+		HandleError: true, // forwards error to the global error handler, so it can decide appropriate status code
+		LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
+			if v.Error == nil {
+				logger.LogAttrs(context.Background(), slog.LevelInfo, "REQUEST",
+					slog.String("uri", v.URI),
+					slog.Int("status", v.Status),
+				)
+			} else {
+				logger.LogAttrs(context.Background(), slog.LevelError, "REQUEST_ERROR",
+					slog.String("uri", v.URI),
+					slog.Int("status", v.Status),
+					slog.String("err", v.Error.Error()),
+				)
+			}
+			return nil
+		},
+	}))
 	e.Static("/", "../src/dist")
 	e.GET("/workers", getWorkers)
 	e.GET("/worker/:id", getWorker)
