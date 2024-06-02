@@ -131,6 +131,7 @@ func removeWorker(c echo.Context) error {
 }
 
 func addWorker(c echo.Context) error {
+
 	return nil
 }
 
