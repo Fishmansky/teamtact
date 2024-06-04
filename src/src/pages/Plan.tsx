@@ -3,16 +3,21 @@ import { Link } from "react-router-dom";
 
 function Plan() {
   const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("workers")
+    fetch("api/workers")
       .then((response) => response.json())
       .then((response) => {
         setData(response);
-        console.log(data);
+        setLoading(false);
       })
       .catch((err) => console.log("GET Error:", err));
   }, []);
+
+  if (!loading) {
+    console.log(data);
+  }
 
   return (
     <header>

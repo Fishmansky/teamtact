@@ -13,7 +13,7 @@ function Workers() {
   }
 
   function handleSubmit() {
-    fetch("worker", {
+    fetch("api/worker", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
