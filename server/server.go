@@ -93,6 +93,14 @@ func DBInit() {
 	}
 }
 
+type jsonError struct {
+	Error string `json:"error"`
+}
+
+func NewjsonError(s string) jsonError {
+	return jsonError{Error: s}
+}
+
 func getWorkers(c echo.Context) error {
 	var workers []Worker
 	rows, err := DB.Query("SELECT * FROM workers")
@@ -104,7 +112,7 @@ func getWorkers(c echo.Context) error {
 		var worker Worker
 		err := rows.Scan(&worker.ID, &worker.Fname, &worker.Sname)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, "Workers data fetch error")
+			return c.JSON(http.StatusInternalServerError, NewjsonError("Workers data fetch error"))
 		}
 		workers = append(workers, worker)
 	}
@@ -116,9 +124,9 @@ func getWorker(c echo.Context) error {
 	var worker Worker
 	if err := DB.QueryRow("SELECT * FROM workers WHERE id = $1", id).Scan(&worker.ID, &worker.Fname, &worker.Sname); err != nil {
 		if err == sql.ErrNoRows {
-			return c.JSON(http.StatusInternalServerError, "Worker not found")
+			return c.JSON(http.StatusInternalServerError, NewjsonError("Worker not found"))
 		}
-		return c.JSON(http.StatusInternalServerError, "Worker data fetch error")
+		return c.JSON(http.StatusInternalServerError, NewjsonError("Worker data fetch error"))
 	}
 	return c.JSON(http.StatusOK, worker)
 }
@@ -132,7 +140,7 @@ func editWorker(c echo.Context) error {
 	}
 	_, err = DB.Exec("UPDATE workers SET fname = $1, sname = $2 WHERE id = $3", worker.Fname, worker.Sname, id)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, "Worker data update error")
+		return c.JSON(http.StatusInternalServerError, NewjsonError("Worker data update error"))
 	}
 	return c.JSON(http.StatusOK, "Worker data updated")
 }
@@ -141,7 +149,7 @@ func removeWorker(c echo.Context) error {
 	id := c.Param("id")
 	_, err := DB.Exec("DELETE FROM workers WHERE id = $1", id)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, "Removig worker error")
+		return c.JSON(http.StatusInternalServerError, NewjsonError("Removig worker error"))
 	}
 	return c.JSON(http.StatusOK, "Worker removed")
 }
@@ -154,7 +162,7 @@ func addWorker(c echo.Context) error {
 	}
 	_, err = DB.Exec("INSERT INTO workers (fname, sname) VALUES ($1, $2)", worker.Fname, worker.Sname)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, "Data inserting error")
+		return c.JSON(http.StatusInternalServerError, NewjsonError("Data inserting error"))
 	}
 	return c.JSON(http.StatusOK, "Worker added")
 }
