@@ -185,10 +185,10 @@ func main() {
 		},
 	}))
 	e.Static("/", "../src/dist")
-	e.GET("/workers", getWorkers)
-	e.GET("/worker/:id", getWorker)
-	e.PUT("/worker/:id", editWorker)
-	e.DELETE("/worker/:id", removeWorker)
-	e.POST("/worker", addWorker)
+	e.GET("/api/workers", getWorkers)
+	e.GET("/api/worker/:id", getWorker)
+	e.PUT("/api/worker/:id", editWorker)
+	e.DELETE("/api/worker/:id", removeWorker)
+	e.POST("/api/worker", addWorker)
 	e.Logger.Fatal(e.Start(":8080"))
 }
