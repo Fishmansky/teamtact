@@ -73,7 +73,7 @@ func CreateTable(t string) {
 	}
 }
 
-func TableDoesntExist(table string) bool {
+func TableExist(table string) bool {
 	var exists bool
 	if err := DB.QueryRow("SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = $1 )", table).Scan(&exists); err != nil {
 		if err == sql.ErrNoRows {
@@ -87,7 +87,7 @@ func TableDoesntExist(table string) bool {
 func DBInit() {
 	DBconnect()
 	for _, table := range Tables {
-		if TableDoesntExist(table) {
+		if !TableExist(table) {
 			CreateTable(table)
 		}
 	}
