@@ -1,7 +1,16 @@
 import { useState } from "react";
 import styles from "./styles/Form.module.css";
 
-function Form() {
+interface Data {
+  id: number;
+  fname: string;
+  sname: string;
+}
+type Props = {
+  setData: React.Dispatch<React.SetStateAction<Data[]>>;
+};
+
+function Form({ setData }: Props) {
   const [form, setForm] = useState({ fname: "", sname: "" });
 
   function handleFname(e: any) {
@@ -21,7 +30,15 @@ function Form() {
       body: JSON.stringify(form),
     })
       .then((result) => result.json())
-      .then((result) => console.log("Response:", result))
+      .then((result) => {
+        console.log("Response:", result);
+        setForm({ fname: "", sname: "" });
+        return fetch("api/workers");
+      })
+      .then((response) => response.json())
+      .then((response) => {
+        setData(response);
+      })
       .catch((err) => console.log("POST Error:", err));
   }
 
@@ -31,12 +48,16 @@ function Form() {
         className={styles.name}
         type="text"
         placeholder="Imię"
+        spellCheck="false"
+        value={form.fname}
         onChange={handleFname}
       />
       <input
         className={styles.name}
         type="text"
         placeholder="Nazwisko"
+        spellCheck="false"
+        value={form.sname}
         onChange={handleSname}
       />
       <button className={styles.submit} onClick={handleSubmit}>

@@ -7,10 +7,10 @@
   width: 200px;
   border: 1px solid black;
   margin: 1em;
-  padding: 0.5em 1em;
+  padding: 0.5em 0.8em;
   border-radius: 10px;
   font-family: inherit;
-  font-size: 0.8rem;
+  font-size: 1rem;
 }
 .name::placeholder {
   font-size: 0.9rem;

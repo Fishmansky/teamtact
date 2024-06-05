@@ -1,0 +1,8 @@
+.list {
+  width: 60%;
+  min-height: 70px;
+  margin-left: 10em;
+}
+.listBox {
+  border-bottom: 1px solid black;
+}
