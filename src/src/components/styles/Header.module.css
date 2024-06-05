@@ -1,0 +1,28 @@
+header {
+  height: 15%;
+  display: flex;
+  align-items: center;
+}
+.a {
+  text-decoration: none;
+  color: black;
+  padding: 0.5em;
+}
+.workers {
+  width: 150px;
+  display: flex;
+  justify-content: center;
+  transition: transform 0.2s ease-in-out;
+}
+.workers:hover {
+  transform: translateX(5px);
+}
+.plan {
+  width: 100px;
+  display: flex;
+  justify-content: center;
+  transition: transform 0.2s ease-in-out;
+}
+.plan:hover {
+  transform: translateX(5px);
+}

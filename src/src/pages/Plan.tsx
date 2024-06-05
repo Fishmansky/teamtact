@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 
 function Plan() {
   const [data, setData] = useState(null);
@@ -19,20 +18,7 @@ function Plan() {
     console.log(data);
   }
 
-  return (
-    <header>
-      <div className="workers">
-        <Link className="a" to="/workers">
-          Workers
-        </Link>
-      </div>
-      <div className="plan">
-        <Link className="a" to="/">
-          Plan
-        </Link>
-      </div>
-    </header>
-  );
+  return <div>Hello</div>;
 }
 
 export default Plan;

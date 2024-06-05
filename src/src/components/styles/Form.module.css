@@ -1,25 +1,16 @@
-header {
-  height: 70px;
-  display: flex;
-  align-items: center;
-}
-.a {
-  text-decoration: none;
-  padding: 2em;
-  color: black;
-}
 .form {
   display: flex;
   flex-direction: column;
-  padding: 30px;
 }
 .name {
   height: 40px;
   width: 200px;
   border: 1px solid black;
   margin: 1em;
-  padding: 10px;
+  padding: 0.5em 1em;
   border-radius: 10px;
+  font-family: inherit;
+  font-size: 0.8rem;
 }
 .name::placeholder {
   font-size: 0.9rem;
