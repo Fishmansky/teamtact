@@ -52,7 +52,7 @@ function List({ data, setData, loading, mainStatus, setMainStatus }: Props) {
             ))
           ) : (
             <div className={loadingStyle.item}>
-              <p className={loadingStyle.name}>Brak aktualnych pracowników.</p>
+              <p className={loadingStyle.name}>Brak aktualnych pracowników</p>
             </div>
           ))}
       </div>

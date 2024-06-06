@@ -23,17 +23,29 @@ function Worker({ id, fname, sname, setData, setMainStatus }: Props) {
     fetch(`/api/worker/${id}`, {
       method: "DELETE",
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Błąd podczas łączenia z serwerem");
+        }
+      })
       .then((response) => {
         setMainStatus({ status: response.status, message: response.message });
         return fetch("api/workers");
       })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Błąd podczas łączenia z serwerem");
+        }
+      })
       .then((response) => {
         setData(response);
       })
       .catch((err) => {
-        console.log("DELETE error:", err);
+        console.log(`DELETE error: ${err.message}`);
         setMainStatus({
           status: 0,
           message: "Wystąpił błąd podczas usuwania pracownika",

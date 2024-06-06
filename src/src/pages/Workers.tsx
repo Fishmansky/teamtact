@@ -15,13 +15,19 @@ function Workers() {
 
   useEffect(() => {
     fetch("api/workers")
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Błąd podczas łączenia z serwerem");
+        }
+      })
       .then((response) => {
         setData(response);
         setLoading(false);
       })
       .catch((err) => {
-        console.log("GET error:", err);
+        console.log(`GET error: ${err.message}`);
         setMainStatus({
           status: 0,
           message: "Wystąpił błąd podczas pobierania listy pracowników",

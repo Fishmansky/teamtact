@@ -46,18 +46,30 @@ function Form({ setData, setMainStatus }: Props) {
           sname: form.sname.trim(),
         }),
       })
-        .then((response) => response.json())
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error("Błąd podczas łączenia z serwerem");
+          }
+        })
         .then((response) => {
           setMainStatus({ status: response.status, message: response.message });
           setForm({ fname: "", sname: "" });
           return fetch("api/workers");
         })
-        .then((response) => response.json())
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error("Błąd podczas łączenia z serwerem");
+          }
+        })
         .then((response) => {
           setData(response);
         })
         .catch((err) => {
-          console.log("POST error:", err);
+          console.log(`POST error: ${err.message}`);
           setMainStatus({
             status: 0,
             message: "Wystąpił błąd podczas dodawania pracownika",
