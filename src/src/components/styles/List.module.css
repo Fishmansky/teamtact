@@ -3,6 +3,20 @@
   min-height: 70px;
   margin-left: 10em;
 }
+.info {
+  display: flex;
+  font-size: 0.9rem;
+  margin-bottom: 1em;
+  padding-bottom: 1em;
+}
+.status1 {
+  margin-left: 7em;
+  color: rgb(0, 163, 57);
+}
+.status0 {
+  margin-left: 7em;
+  color: rgb(184, 0, 0);
+}
 .listBox {
   border-bottom: 1px solid black;
 }

@@ -8,11 +8,20 @@ interface Data {
 }
 type Props = {
   setData: React.Dispatch<React.SetStateAction<Data[]>>;
+  setMainStatus: React.Dispatch<
+    React.SetStateAction<{
+      status: number;
+      message: string;
+    }>
+  >;
 };
 
-function Form({ setData }: Props) {
+function Form({ setData, setMainStatus }: Props) {
   const [form, setForm] = useState({ fname: "", sname: "" });
-  const [error, setError] = useState(false);
+  const [status, setStatus] = useState({
+    status: 1,
+    message: "Dodaj pracownika:",
+  });
 
   function handleFname(e: any) {
     setForm({ ...form, fname: e.target.value });
@@ -24,9 +33,9 @@ function Form({ setData }: Props) {
 
   function handleSubmit() {
     if (!form.fname.trim() || !form.sname.trim()) {
-      setError(true);
+      setStatus({ status: 0, message: "Najpierw dodaj imię i nazwisko!" });
     } else {
-      setError(false);
+      setStatus({ status: 1, message: "Dodaj pracownika:" });
       fetch("api/worker", {
         method: "POST",
         headers: {
@@ -37,9 +46,9 @@ function Form({ setData }: Props) {
           sname: form.sname.trim(),
         }),
       })
-        .then((result) => result.json())
-        .then((result) => {
-          console.log("Response:", result);
+        .then((response) => response.json())
+        .then((response) => {
+          setMainStatus({ status: response.status, message: response.message });
           setForm({ fname: "", sname: "" });
           return fetch("api/workers");
         })
@@ -47,16 +56,24 @@ function Form({ setData }: Props) {
         .then((response) => {
           setData(response);
         })
-        .catch((err) => console.log("POST Error:", err));
+        .catch((err) => {
+          console.log("POST error:", err);
+          setMainStatus({
+            status: 0,
+            message: "Wystąpił błąd podczas dodawania pracownika",
+          });
+          setForm({ fname: "", sname: "" });
+        });
     }
   }
 
   return (
     <div className={styles.form}>
-      {!error && <p className={styles.add}>Dodaj pracownika:</p>}
-      {error && <p className={styles.error}>Najpierw dodaj imię i nazwisko!</p>}
+      <p className={status.status ? styles.add : styles.error}>
+        {status.message}
+      </p>
       <input
-        className={!error ? styles.name : styles.nameError}
+        className={status.status ? styles.name : styles.nameError}
         type="text"
         placeholder="Imię"
         spellCheck="false"
@@ -64,7 +81,7 @@ function Form({ setData }: Props) {
         onChange={handleFname}
       />
       <input
-        className={!error ? styles.name : styles.nameError}
+        className={status.status ? styles.name : styles.nameError}
         type="text"
         placeholder="Nazwisko"
         spellCheck="false"

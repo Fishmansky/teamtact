@@ -5,6 +5,7 @@ import List from "../components/List";
 function Workers() {
   const [data, setData] = useState<Data[]>([{ id: 0, fname: "", sname: "" }]);
   const [loading, setLoading] = useState(true);
+  const [mainStatus, setMainStatus] = useState({ status: 1, message: "" });
 
   interface Data {
     id: number;
@@ -19,13 +20,25 @@ function Workers() {
         setData(response);
         setLoading(false);
       })
-      .catch((err) => console.log("GET Error:", err));
+      .catch((err) => {
+        console.log("GET error:", err);
+        setMainStatus({
+          status: 0,
+          message: "Wystąpił błąd podczas pobierania listy pracowników",
+        });
+      });
   }, []);
 
   return (
     <section className="container-workers">
-      <Form setData={setData} />
-      <List data={data} setData={setData} loading={loading} />
+      <Form setData={setData} setMainStatus={setMainStatus} />
+      <List
+        data={data}
+        setData={setData}
+        loading={loading}
+        mainStatus={mainStatus}
+        setMainStatus={setMainStatus}
+      />
     </section>
   );
 }
