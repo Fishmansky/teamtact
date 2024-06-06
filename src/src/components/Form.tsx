@@ -12,6 +12,7 @@ type Props = {
 
 function Form({ setData }: Props) {
   const [form, setForm] = useState({ fname: "", sname: "" });
+  const [error, setError] = useState(false);
 
   function handleFname(e: any) {
     setForm({ ...form, fname: e.target.value });
@@ -22,30 +23,40 @@ function Form({ setData }: Props) {
   }
 
   function handleSubmit() {
-    fetch("api/worker", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form),
-    })
-      .then((result) => result.json())
-      .then((result) => {
-        console.log("Response:", result);
-        setForm({ fname: "", sname: "" });
-        return fetch("api/workers");
+    if (!form.fname.trim() || !form.sname.trim()) {
+      setError(true);
+    } else {
+      setError(false);
+      fetch("api/worker", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fname: form.fname.trim(),
+          sname: form.sname.trim(),
+        }),
       })
-      .then((response) => response.json())
-      .then((response) => {
-        setData(response);
-      })
-      .catch((err) => console.log("POST Error:", err));
+        .then((result) => result.json())
+        .then((result) => {
+          console.log("Response:", result);
+          setForm({ fname: "", sname: "" });
+          return fetch("api/workers");
+        })
+        .then((response) => response.json())
+        .then((response) => {
+          setData(response);
+        })
+        .catch((err) => console.log("POST Error:", err));
+    }
   }
 
   return (
     <div className={styles.form}>
+      {!error && <p className={styles.add}>Dodaj pracownika:</p>}
+      {error && <p className={styles.error}>Najpierw dodaj imię i nazwisko!</p>}
       <input
-        className={styles.name}
+        className={!error ? styles.name : styles.nameError}
         type="text"
         placeholder="Imię"
         spellCheck="false"
@@ -53,7 +64,7 @@ function Form({ setData }: Props) {
         onChange={handleFname}
       />
       <input
-        className={styles.name}
+        className={!error ? styles.name : styles.nameError}
         type="text"
         placeholder="Nazwisko"
         spellCheck="false"

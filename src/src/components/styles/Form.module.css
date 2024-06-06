@@ -1,6 +1,18 @@
 .form {
   display: flex;
   flex-direction: column;
+  width: 18%;
+}
+.add {
+  margin: 0 1em;
+  font-size: 0.9rem;
+  padding-bottom: 1em;
+}
+.error {
+  margin: 0 1em;
+  font-size: 0.9rem;
+  padding-bottom: 1em;
+  color: rgb(184, 0, 0);
 }
 .name {
   height: 40px;
@@ -13,6 +25,19 @@
   font-size: 1rem;
 }
 .name::placeholder {
+  font-size: 0.9rem;
+}
+.nameError {
+  height: 40px;
+  width: 200px;
+  border: 1px solid rgb(242, 0, 0);
+  margin: 1em;
+  padding: 0.5em 0.8em;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 1rem;
+}
+.nameError::placeholder {
   font-size: 0.9rem;
 }
 .submit {
